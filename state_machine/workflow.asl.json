@@ -11,11 +11,18 @@
             "Type": "Parallel",
             "Next": "Notify",
             "Branches": [
-                {
+                 {
                     "StartAt": "Process Purchase Orders",
                     "States": {
                         "Process Purchase Orders": {
-                            "Type": "Pass",
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "Parameters": {
+                                "FunctionName": "${PurchaseOrderFunctionArn}",
+                                "Payload": {
+                                    "Input.$": "$"
+                                }
+                            },
                             "End": true
                         }
                     }
@@ -24,7 +31,14 @@
                     "StartAt": "Process Funds",
                     "States": {
                         "Process Funds": {
-                            "Type": "Pass",
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "Parameters": {
+                                "FunctionName": "${FundsFunctionArn}",
+                                "Payload": {
+                                    "Input.$": "$"
+                                }
+                            },
                             "End": true
                         }
                     }

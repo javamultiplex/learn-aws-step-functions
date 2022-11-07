@@ -30,28 +30,45 @@ Resources:
               - Effect: 'Allow'
                 Action: 'lambda:InvokeFunction'
                 Resource:
-                  - !GetAtt HelloWorldFunction.Arn
+                  - !GetAtt PurchaseOrderFunction.Arn
+                  - !GetAtt FundFunction.Arn
 
   HelloWorldStateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri: state_machine/workflow.asl.json
       Role: !GetAtt HelloWorldStateMachineRole.Arn
+      DefinitionSubstitutions:
+        PurchaseOrderFunctionArn: !GetAtt PurchaseOrderFunction.Arn
+        FundsFunctionArn: !GetAtt FundFunction.Arn
 
-  HelloWorldFunction:
+  PurchaseOrderFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello_world/
+      CodeUri: purchase_order/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+
+  FundFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: funds/
       Handler: app.lambda_handler
       Runtime: python3.8
 
 Outputs:
-  HelloWorldFunction:
-    Description: 'Hello World Lambda Function ARN'
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: 'Implicit IAM Role created for Hello World function'
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  PurchaseOrderFunction:
+    Description: 'Purchase Order Lambda Function ARN'
+    Value: !GetAtt PurchaseOrderFunction.Arn
+  FundFunction:
+    Description: 'Fund Lambda Function ARN'
+    Value: !GetAtt FundFunction.Arn
+  PurchaseOrderFunctionIamRole:
+    Description: 'Implicit IAM Role created for Purchase Order function'
+    Value: !GetAtt PurchaseOrderFunctionRole.Arn
+  FundFunctionIamRole:
+    Description: 'Implicit IAM Role created for Fund function'
+    Value: !GetAtt FundFunctionRole.Arn
   HelloWorldStateMachine:
     Description: 'Hello World State Machine ARN'
     Value: !Ref HelloWorldStateMachine
