@@ -36,7 +36,7 @@ Resources:
     Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri: state_machine/workflow.asl.json
-      Role: !Ref HelloWorldStateMachineRole
+      Role: !GetAtt HelloWorldStateMachineRole.Arn
 
   HelloWorldFunction:
     Type: AWS::Serverless::Function
