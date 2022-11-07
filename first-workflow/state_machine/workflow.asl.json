@@ -1,0 +1,39 @@
+{
+    "Comment": "An example of the Amazon States Language using a parallel state to execute two branches at the same time.",
+    "StartAt": "Begin Transaction",
+    "States": {
+
+        "Begin Transaction":{
+            "Type": "Pass",
+             "Next": "Parrallel Processing Starts"
+        },
+        "Parrallel Processing Starts": {
+            "Type": "Parallel",
+            "Next": "Notify",
+            "Branches": [
+                {
+                    "StartAt": "Process Purchase Orders",
+                    "States": {
+                        "Process Purchase Orders": {
+                            "Type": "Pass",
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "Process Funds",
+                    "States": {
+                        "Process Funds": {
+                            "Type": "Pass",
+                            "End": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Notify": {
+            "Type": "Pass",
+            "End": true
+        }
+    }
+}
